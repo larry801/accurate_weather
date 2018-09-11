@@ -3,6 +3,8 @@ environment:
  PY_PYTHON: 2.7-32
 install:
   - py -m pip install markdown
+  - py -m pip install --upgrade pip
+  - py -m pip install --upgrade six
   
 
 build_script:

@@ -2,7 +2,7 @@
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 
-
+import languageHandler
 from configobj import ConfigObj
 import ui
 import globalVars
@@ -168,7 +168,7 @@ def cc_api_token():
         # this is the test token on http://wiki.caiyunapp.com/index.php/彩云天气API/v2
         config["providers"]["0"]["token"] = "TAkhjf8d1nlSlspN"
         save_json()
-        val = "TAkhjf8d1nlSlspN"
+        val = config["providers"]["0"]["token"]
     return val
 
 
@@ -177,8 +177,8 @@ def cc_proxy_base_url():
         value = config["providers"]["0"]["reverse_proxy_url"]
     except KeyError:
         config["providers"]["0"]["reverse_proxy_url"] = r"http://caiyun?token="
-        value = config["providers"]["0"]["reverse_proxy_url"]
         save_json()
+        value = config["providers"]["0"]["reverse_proxy_url"]
     return value
 
 
@@ -192,9 +192,39 @@ def cc_access_method():
     return val
 
 
-def set_cc_access_method(value):
-    config["providers"]["0"]["access_method"] = value
+def cc_config_or_default(key_name, default_value):
+    try:
+        val = config["providers"]["0"][key_name]
+    except KeyError:
+        val = default_value
+        config["providers"]["0"][key_name] = default_value
+        save_json()
+    return val
+
+def set_cc_config(key_name, value):
+    config["providers"]["0"][key_name] = value
     save_json()
+
+
+def set_cc_access_method(value):
+    set_cc_config("access_method", value)
+
+
+def set_cc_description_language(value):
+    set_cc_config("description_language", value)
+
+
+def get_cc_description_language():
+    lang = languageHandler.getLanguage()
+    if lang == 'zh_CN':
+        default_lang = 1
+    elif lang == "zh_TW":
+        default_lang = 2
+    elif lang.startswith("en"):
+        default_lang = 0
+    else:
+        default_lang = 0
+    return cc_config_or_default("description_language", default_lang)
 
 
 def set_cc_api_token(value):

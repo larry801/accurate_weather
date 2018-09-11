@@ -308,6 +308,7 @@ class ColorfulClouds(SettingsDialog):
 
     api_token_input = None  # type: wx.TextCtrl
     access_method_list = None  # type: wx.Choice
+    description_language_list = None  # type: wx.Choice
 
     def makeSettings(self, sizer):
         sHelper = guiHelper.BoxSizerHelper(self, sizer=sizer)
@@ -319,6 +320,16 @@ class ColorfulClouds(SettingsDialog):
                                                             wx.Choice,
                                                             choices=access_method_choices)
         self.access_method_list.SetSelection(_config.cc_access_method())
+        language_choices = [
+            _("English"),
+            _("Simplified Chinese"),
+            _("Traditional Chinese (Taiwan)")
+        ]
+
+        self.description_language_list = sHelper.addLabeledControl(_("Language used in forecast description"),
+                                                                   wx.Choice,
+                                                                   choices=language_choices)
+        self.description_language_list.SetSelection(_config.get_cc_description_language())
 
         self.api_token_input = sHelper.addLabeledControl(_("API Key"),
                                                          wx.TextCtrl)
@@ -326,8 +337,9 @@ class ColorfulClouds(SettingsDialog):
         sHelper.addItem(self.api_token_input)
 
     def onOk(self, evt):
-        _config.set_cc_access_method(self.api_token_input.GetValue())
+        _config.set_cc_api_token(self.api_token_input.GetValue())
         _config.set_cc_access_method(self.access_method_list.GetSelection())
+        _config.set_cc_description_language(self.description_language_list.GetSelection())
         self.DestroyChildren()
         self.Destroy()
         self.SetReturnCode(wx.ID_OK)

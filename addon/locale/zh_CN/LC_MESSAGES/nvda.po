@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'accurate_weather' '0.1.0-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@freelists.org'\n"
-"POT-Creation-Date: 2018-09-11 10:12+0800\n"
-"PO-Revision-Date: 2018-09-11 10:14+0800\n"
+"POT-Creation-Date: 2018-09-11 16:08+0800\n"
+"PO-Revision-Date: 2018-09-11 16:09+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -47,7 +47,7 @@ msgid ""
 "In {name} the weather report for today is {condition} with the maximum "
 "temperature of {max}degrees {unit} with the minimum temperature of {min} "
 "degrees {unit}."
-msgstr "{name}   {condition}, {min}到 {max} {unit}。"
+msgstr "{name} 今天  {condition}, {min}到 {max} {unit}。"
 
 #: addon\globalPlugins\accurate_weather\reporter.py:53
 msgid ""
@@ -156,19 +156,35 @@ msgstr "设置天气预报单位"
 msgid "Colorful Clouds settings"
 msgstr "彩云天气设置"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:315
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:316
 msgid "How to get data from API"
 msgstr "如何从 API 获取数据"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:316
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:317
 msgid "Through proxy"
 msgstr "通过代理"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:317
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:318
 msgid "Use your own API token"
 msgstr "使用您自己的 API 密钥"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:323
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:324
+msgid "English"
+msgstr "英语"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:325
+msgid "Simplified Chinese"
+msgstr "简体中文"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:326
+msgid "Traditional Chinese (Taiwan)"
+msgstr "繁体中文（台湾）"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:329
+msgid "Language used in forecast description"
+msgstr "天气预报语言"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:334
 msgid "API Key"
 msgstr "API密钥"
 
@@ -204,42 +220,42 @@ msgstr "米每秒"
 msgid "Levels"
 msgstr "风力等级"
 
-#: addon\globalPlugins\accurate_weather\units.py:55
+#: addon\globalPlugins\accurate_weather\units.py:121
 msgid "Cloudy"
 msgstr "多云"
 
-#: addon\globalPlugins\accurate_weather\units.py:56
-#: addon\globalPlugins\accurate_weather\units.py:57
+#: addon\globalPlugins\accurate_weather\units.py:122
+#: addon\globalPlugins\accurate_weather\units.py:123
 msgid "Sunny"
 msgstr "晴"
 
-#: addon\globalPlugins\accurate_weather\units.py:58
-#: addon\globalPlugins\accurate_weather\units.py:59
-#: addon\globalPlugins\accurate_weather\units.py:60
+#: addon\globalPlugins\accurate_weather\units.py:124
+#: addon\globalPlugins\accurate_weather\units.py:125
+#: addon\globalPlugins\accurate_weather\units.py:126
 msgid "Partly Cloudy"
 msgstr "多云"
 
-#: addon\globalPlugins\accurate_weather\units.py:61
+#: addon\globalPlugins\accurate_weather\units.py:127
 msgid "Rain"
 msgstr "雨"
 
-#: addon\globalPlugins\accurate_weather\units.py:62
+#: addon\globalPlugins\accurate_weather\units.py:128
 msgid "Wind"
 msgstr "大风"
 
-#: addon\globalPlugins\accurate_weather\units.py:63
+#: addon\globalPlugins\accurate_weather\units.py:129
 msgid "Fog"
 msgstr "雾"
 
-#: addon\globalPlugins\accurate_weather\units.py:64
+#: addon\globalPlugins\accurate_weather\units.py:130
 msgid "Snow"
 msgstr "雪"
 
-#: addon\globalPlugins\accurate_weather\units.py:65
+#: addon\globalPlugins\accurate_weather\units.py:131
 msgid "Haze"
 msgstr "霾"
 
-#: addon\globalPlugins\accurate_weather\util.py:32
+#: addon\globalPlugins\accurate_weather\util.py:35
 msgid ""
 "Network error occurred please check your Internet connection or firewall "
 "settings."

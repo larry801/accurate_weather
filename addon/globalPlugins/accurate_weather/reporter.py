@@ -37,6 +37,7 @@ class ForecastReporter(object):
         for e in seq:
             report_buffer.write(self.__getattribute__(e))
         report_buffer.write(location["forecast"]["raw"]["forecast_keypoint"])
+        report_buffer.write(" , ")
         report_buffer.write(location["forecast"]["raw"]["hourly"]["description"])
         return report_buffer.getvalue()
 

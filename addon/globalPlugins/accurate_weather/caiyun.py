@@ -108,12 +108,16 @@ class WeatherDataProvider(base.AbstractWeatherDataProvider):
         location["forecast"] = {}
         location["forecast"]["raw"] = self.raw_f["result"]
         location["forecast"]["daily"] = {}
+        location["forecast"]["daily"] = {}
+        dates_set = set()
         for entry in self.daily_entries:
             for item in self.raw_f["result"]["daily"][entry]:
+                dates_set.add(item["date"])
                 try:
                     location["forecast"]["daily"][item["date"]][entry] = item["value"]
                 except KeyError:
                     location["forecast"]["daily"][item["date"]] = {}
+        location["forecast"]["daily"]["dates"] = list(dates_set)
         for entry in self.daily_max_min_avg_entries:
             for item in self.raw_f["result"]["daily"][entry]:
                 try:
@@ -156,6 +160,16 @@ class WeatherDataProvider(base.AbstractWeatherDataProvider):
         from . import  _config
         return _config.cc_proxy_base_url()
 
+    def get_language_suffix(self):
+        from . import  _config
+        lang = _config.get_cc_description_language()
+        if lang == 0:
+            return r"&lang=en"
+        elif lang == 1:
+            return r"&lang=zh_CN"
+        elif lang == 2:
+            return r"&lang=zh_TW"
+
     def get_api_url(self, location, forecast=False):
         am = self.access_method()
         if am == 0:
@@ -169,7 +183,7 @@ class WeatherDataProvider(base.AbstractWeatherDataProvider):
             base_url = r"https://api.caiyunapp.com/v2/" + self.get_api_token()
             location_string = r'/' + location["longitude"] + ',' + location["latitude"]
         if forecast:
-            return base_url + location_string + forecast_tail
+            return base_url + location_string + forecast_tail + self.get_language_suffix()
         else:
-            return base_url + location_string + realtime_tail
+            return base_url + location_string + realtime_tail + self.get_language_suffix()
 

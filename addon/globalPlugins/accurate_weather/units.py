@@ -51,6 +51,72 @@ def temperature_convert_to(value, unit_id):
 WIND_SPEED_KPH_UID = 0
 WIND_SPEED_MPS_UID = 1
 WIND_SPEED_LEVEL_UID = 2
+
+
+def wind_speed_to(value, wid):
+    try:
+        numeric_value = float(value)
+    except ValueError:
+        return None
+    if wid == WIND_SPEED_KPH_UID:
+        return value
+    elif wid == WIND_SPEED_MPS_UID:
+        converted_value = numeric_value / 3.6
+        return converted_value
+    elif wid == WIND_SPEED_LEVEL_UID:
+        if numeric_value < 1:
+            wind_level_number = 0
+        elif numeric_value < 5:
+            wind_level_number = 1
+        elif numeric_value < 11:
+            wind_level_number = 2
+        elif numeric_value < 19:
+            wind_level_number = 3
+        elif numeric_value < 28:
+            wind_level_number = 4
+        elif numeric_value < 38:
+            wind_level_number = 5
+        elif numeric_value < 49:
+            wind_level_number = 6
+        elif numeric_value < 61:
+            wind_level_number = 7
+        elif numeric_value < 74:
+            wind_level_number = 8
+        elif numeric_value < 88:
+            wind_level_number = 9
+        elif numeric_value < 102:
+            wind_level_number = 10
+        elif numeric_value < 117:
+            wind_level_number = 11
+        elif numeric_value < 133:
+            wind_level_number = 12
+        elif numeric_value < 149:
+            wind_level_number = 13
+        elif numeric_value < 166:
+            wind_level_number = 14
+        elif numeric_value < 183:
+            wind_level_number = 15
+        elif numeric_value < 201:
+            wind_level_number = 16
+        else:
+            wind_level_number = 17
+        return wind_level_number
+
+
+def wind_speed_from(value, wid):
+    try:
+        numeric_value = float(value)
+    except ValueError:
+        return None
+    if wid == WIND_SPEED_KPH_UID:
+        return value
+    elif wid == WIND_SPEED_MPS_UID:
+        converted_value = numeric_value * 3.6
+        return converted_value
+
+
+
+
 sky_con_dic = {
     'CLOUDY': _('Cloudy'),
     'CLEAR_DAY': _('Sunny'),

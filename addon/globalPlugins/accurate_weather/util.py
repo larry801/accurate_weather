@@ -1,7 +1,10 @@
 import json
 import ui
-#from six.moves.html_parser import HTMLParser
-from six.moves.urllib.request import urlopen
+try:
+    from urllib import urlopen
+except ImportError:
+    # Python 3
+    from urllib.request import urlopen
 
 
 def FindWoeID(lng, lat):
