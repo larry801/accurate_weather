@@ -11,8 +11,8 @@ install:
 
 
 build_script:
-  - scons.py
-  - scons.py pot
+  - scons
+  - scons pot
 
 artifacts:
   - path: '*.nvda-addon'
