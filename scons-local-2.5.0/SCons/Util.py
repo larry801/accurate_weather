@@ -31,7 +31,7 @@ import os
 import re
 import sys
 import types
-from collections import UserDict, UserList, UserString
+from six.moves import UserDict, UserList, UserString
 
 # Don't "from types import ..." these because we need to get at the
 # types module later to look for UnicodeType.
