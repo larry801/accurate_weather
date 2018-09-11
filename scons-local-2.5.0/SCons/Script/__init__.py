@@ -87,6 +87,11 @@ import SCons.Subst
 import SCons.Tool
 import SCons.Util
 import SCons.Variables
+import SCons.Variables.BoolVariable
+import SCons.Variables.EnumVariable
+import SCons.Variables.ListVariable
+import SCons.Variables.PackageVariable
+import SCons.Variables.PathVariable
 import SCons.Defaults
 
 import Main
@@ -162,6 +167,11 @@ PackageVariable = SCons.Variables.PackageVariable
 PathVariable = SCons.Variables.PathVariable
 
 # Deprecated names that will go away some day.
+import SCons.Options.BoolOption
+import SCons.Options.EnumOption
+import SCons.Options.ListOption
+import SCons.Options.PathOption
+import SCons.Options.PackageOption
 BoolOption = SCons.Options.BoolOption
 EnumOption = SCons.Options.EnumOption
 ListOption = SCons.Options.ListOption
@@ -169,6 +179,7 @@ PackageOption = SCons.Options.PackageOption
 PathOption = SCons.Options.PathOption
 
 # Action factories.
+
 Chmod = SCons.Defaults.Chmod
 Copy = SCons.Defaults.Copy
 Delete = SCons.Defaults.Delete

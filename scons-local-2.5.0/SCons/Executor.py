@@ -48,8 +48,8 @@ class Batch(object):
         self.targets = targets
         self.sources = sources
 
-
-class TSList(collections.UserList):
+import six
+class TSList(six.moves.UserList):
     """A class that implements $TARGETS or $SOURCES expansions by wrapping
     an executor Method.  This class is used in the Executor.lvars()
     to delay creation of NodeList objects until they're needed.

@@ -207,8 +207,8 @@ class DictEmitter(SCons.Util.Selector):
             target, source = emitter(target, source, env)
         return (target, source)
 
-
-class ListEmitter(collections.UserList):
+import six
+class ListEmitter(six.moves.UserList):
     """A callable list of emitters that calls each in sequence,
     returning the result.
     """
@@ -229,7 +229,7 @@ misleading_keywords = {
 }
 
 
-class OverrideWarner(collections.UserDict):
+class OverrideWarner(six.moves.UserDict):
     """A class for warning about keyword arguments that we use as
     overrides in a Builder call.
 

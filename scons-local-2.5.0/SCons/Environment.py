@@ -38,7 +38,7 @@ import os
 import re
 import shlex
 import sys
-from collections import UserDict
+from six.moves import UserDict
 
 import SCons.Action
 import SCons.Builder

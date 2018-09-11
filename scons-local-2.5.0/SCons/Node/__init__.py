@@ -1704,7 +1704,8 @@ class Node(object):
             return (' ' * 11).join(lines)
 
 
-class NodeList(collections.UserList):
+from six.moves import UserList
+class NodeList(UserList):
     def __str__(self):
         return str(list(map(str, self.data)))
 

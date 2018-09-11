@@ -37,8 +37,8 @@ import SCons.Errors
 import SCons.Node
 import SCons.Util
 
-
-class AliasNameSpace(collections.UserDict):
+from six.moves import UserDict
+class AliasNameSpace(UserDict):
     def Alias(self, name, **kw):
         if isinstance(name, SCons.Node.Alias.Alias):
             return name
