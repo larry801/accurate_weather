@@ -5,6 +5,7 @@ install:
   - py -m pip install --upgrade pip
   - py -m pip install --upgrade six
   - py -m pip install --upgrade setuptools
+  - py -m pip install --upgrade wheel
   - py -m pip install markdown
   - py -m pip install scons
 
