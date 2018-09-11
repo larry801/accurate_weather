@@ -1,0 +1,20 @@
+{
+  "copy_to_clipboard": false,
+  "provider_id": 0,
+  "locations": [],
+  "location_report_sequence":[],
+  "providers": {
+    "0": {
+      "realtime_seq": [
+        "basic_info"
+      ],
+      "forecast_seq": [
+        "basic_info"
+      ]
+    }
+  },
+  "units": {
+    "temperature": 0,
+    "wind_speed": 0
+  }
+}
