@@ -5,11 +5,12 @@ install:
   - py -m pip install --upgrade pip
   - py -m pip install --upgrade six
   - py -m pip install markdown
+  - py -m pip install scons
 
 
 build_script:
-  - PY scons.py
-  - PY scons.py pot
+  - scons.py
+  - scons.py pot
 
 artifacts:
   - path: '*.nvda-addon'
