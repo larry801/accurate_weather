@@ -18,7 +18,6 @@ from . import location
 from . import _config
 from logHandler import log
 import addonHandler
-import wx
 import gui
 import os
 import globalPluginHandler
@@ -27,37 +26,25 @@ import config
 import ui
 # We need to initialize translation and localization support:
 addonHandler.initTranslation()
+_addonDir = os.path.join(os.path.dirname(__file__), "..", "..").decode("mbcs")
+_curAddon = addonHandler.Addon(_addonDir)
+_addonSummary = _curAddon.manifest['summary']
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
-    def script_about(self, evt):
-        """
-        Show about dialog
-        """
-        from wx.adv import AboutDialogInfo
-        info = AboutDialogInfo()
-        info.AddDeveloper("Larry Wang")
-        info.SetName("Accurate Weather")
-        icon_path = os.path.join(globalVars.appArgs.configPath,
-                                 "addons",
-                                 "accurate_weather",
-                                 "colorfulClouds.png")
-        info.SetIcon(wx.Icon(icon_path, wx.BITMAP_TYPE_PNG))
-        description = _("The minutely precipitation forecast is jointly produced by China Meteorological Administration and Colorful Clouds Technology")
-        info.SetDescription(description)
-        wx.adv.AboutBox(info, gui.mainFrame)
+    scriptCategory = _addonSummary
 
-    __gestures = {
-        "kb:NVDA+alt+shift+w": "about",
-        "kb:NVDA+w": "announce_real_time",
-        "kb:NVDA+alt+w": "announce_forecast",
-        "kb:NVDA+control+alt+shift+w": "open_location_manager"
-    }
+    # def script_about(self, evt):
+    #     pass
+    #
+    # script_about.__doc__ = _("Open about dialog")
 
-    def script_open_location_manager(self, evt):
-        dlg = settingsGUI.LocationSettings(gui.mainFrame, multiInstanceAllowed=True)
-        dlg.ShowModal()
+    # def script_open_location_manager(self, evt):
+    #     dlg = settingsGUI.LocationSettings(gui.mainFrame, multiInstanceAllowed=True)
+    #     gui.runScriptModalDialog(dlg)
+    #
+    # script_open_location_manager.__doc__ = _("Open location manager")
 
     def script_announce_forecast(self, gesture):
         if not _config.config["locations"]:
@@ -74,6 +61,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             provider.forecast_update(this_location)
             buffer.write(forecast_reporter.report(this_location))
         ui.message(buffer.getvalue())
+
+    script_announce_forecast.__doc__ = _("Announce weather forecast")
 
     def script_announce_real_time(self, gesture):
         if not _config.config["locations"]:
@@ -92,6 +81,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             buffer.write(report_string)
         ui.message(buffer.getvalue())
 
+    script_announce_real_time.__doc__ = _("Announce realtime weather condition")
+
     def __init__(self):
         super(GlobalPlugin, self).__init__()
         if globalVars.appArgs.secure:
@@ -109,3 +100,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         # gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.script_open_location_manager, self.locationManagerItem)
         # self.AboutItem = self.WeatherMenu.Append(wx.ID_ANY, _("&About"), _("Opens the about box"))
         # gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.script_about, self.AboutItem)
+
+    __gestures = {
+        # "kb:NVDA+alt+shift+w": "about",
+        # "kb:NVDA+control+alt+shift+w": "open_location_manager"
+        "kb:NVDA+w": "announce_real_time",
+        "kb:NVDA+alt+w": "announce_forecast",
+    }

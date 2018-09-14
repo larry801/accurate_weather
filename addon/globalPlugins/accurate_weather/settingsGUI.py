@@ -4,17 +4,69 @@ from __future__ import (absolute_import, division,
 
 from gui.settingsDialogs import SettingsPanel, SettingsDialog
 import gui
+import os
+import globalVars
 import wx
 from gui import guiHelper
 from logHandler import log
+import ui
 from wx import Button
 import addonHandler
 from . import ObjectListView
 from . import _config
 from . import location
 from . import units
+from . import util
+import json
 
 addonHandler.initTranslation()
+_addonDir = os.path.join(os.path.dirname(__file__), "..", "..").decode("mbcs")
+_curAddon = addonHandler.Addon(_addonDir)
+_addonSummary = _curAddon.manifest['summary']
+confirm_message = _("Yes or no?")
+
+
+def add_location(lat, lng, name):
+    new_location = {
+        "latitude": lat,
+        "longitude": lng,
+        "name": name
+    }
+    _config.add_location(new_location)
+
+
+def YesOrNo(parent, question, caption=confirm_message):
+    dlg = wx.MessageDialog(parent, question, caption, wx.YES_NO | wx.ICON_QUESTION)
+    result = dlg.ShowModal() == wx.ID_YES
+    dlg.Destroy()
+    return result
+
+
+class ManuallyInputLocationDialog(SettingsDialog):
+    name_input = None  # type: wx.TextCtrl
+    latitude_input = None  # type: wx.TextCtrl
+    longitude_input = None  # type: wx.TextCtrl
+
+    def onOk(self, evt):
+        name = self.name_input.GetValue()
+        lat = self.latitude_input.GetValue()
+        lng = self.longitude_input.GetValue()
+        if not util.isValidLatitude(lat):
+            ui.message(_("Please input a valid latitude value"))
+            self.latitude_input.SetFocus()
+            return
+        if not util.isValidLongitude(lng):
+            self.longitude_input.SetFocus()
+            ui.message(_("Please input a valid longitude value"))
+            return
+        add_location(lat, lng, name)
+        super(SettingsDialog, self).onOk(evt)
+
+    def makeSettings(self, sizer):
+        helper = guiHelper.BoxSizerHelper(self, sizer=sizer)
+        self.name_input = helper.addLabeledControl(_("Name of new location"), wx.TextCtrl)
+        self.latitude_input = helper.addLabeledControl(_("Latitude of new location"), wx.TextCtrl)
+        self.longitude_input = helper.addLabeledControl(_("Longitude of new location"), wx.TextCtrl)
 
 
 class EditLocationNameDlg(wx.Dialog):
@@ -101,7 +153,7 @@ class LocationSettings(SettingsDialog):
         self.location_list.SetFocus()
 
     def OnAddClick(self, evt):
-        entryDialog = AddLocationEntryDialog(self, multiInstanceAllowed=True)
+        entryDialog = ChooseMethodsToAddLocation(self, multiInstanceAllowed=True)
         entryDialog.ShowModal()
         self.refresh_list()
 
@@ -131,16 +183,37 @@ class ChooseMethodsToAddLocation(SettingsDialog):
     geo_button = None  # type: Button
     China_administrative_division_button = None  # type: Button
     manually_input_button = None  # type: Button
+    detect_by_ip_address_button = None  # type: Button
     title = _("How to add new location?")
+
+    def onDetectByIp(self, evt):
+        data = util.get_data_from_url(r"https://ifconfig.co/json")
+        content = json.loads(data)
+        lng = content["longitude"]
+        lat = content["latitude"]
+        city_name = content["city"]
+        country = content["country"]
+        message = _("According to your ip address You are in{city_name},{country}. Do you want to add this one?")
+        msg = message.format(city_name=city_name,
+                             country=country)
+        if YesOrNo(self, msg):
+            new_location = {
+                "latitude": lat,
+                "longitude": lng,
+                "name": city_name
+            }
+            _config.add_location(new_location)
 
     def onGeoNames(self, evt):
         pass
 
     def onChinaAdministrativeDivisions(self, evt):
-        pass
+        entryDialog = ChooseFromChinaAdministrativeDivisionDialog(self, multiInstanceAllowed=True)
+        entryDialog.ShowModal()
 
     def onManuallyInput(self, evt):
-        pass
+        entryDialog = ManuallyInputLocationDialog(self, multiInstanceAllowed=True)
+        entryDialog.ShowModal()
 
     def makeSettings(self, sizer):
         settingsSizerHelper = guiHelper.BoxSizerHelper(self, sizer=sizer)
@@ -151,8 +224,15 @@ class ChooseMethodsToAddLocation(SettingsDialog):
                              self.onGeoNames)
         settingsSizerHelper.addItem(self.geo_button)
 
+        self.detect_by_ip_address_button = wx.Button(self,
+                                                     label=_("Detect your location by ip address"))
+        self.detect_by_ip_address_button.Bind(wx.EVT_BUTTON,
+
+                                              self.onDetectByIp)
+        settingsSizerHelper.addItem(self.detect_by_ip_address_button)
+
         self.manually_input_button = wx.Button(self,
-                                               label=_("Search in geonames"))
+                                               label=_("Manually input latitude and longitude"))
         self.manually_input_button.Bind(wx.EVT_BUTTON,
                                         self.onManuallyInput)
         settingsSizerHelper.addItem(self.manually_input_button)
@@ -164,7 +244,8 @@ class ChooseMethodsToAddLocation(SettingsDialog):
         settingsSizerHelper.addItem(self.China_administrative_division_button)
 
 
-class AddLocationEntryDialog(SettingsDialog):
+# noinspection PyTypeChecker
+class ChooseFromChinaAdministrativeDivisionDialog(SettingsDialog):
     province_list = None  # type: wx.Choice
     region_list = None  # type: wx.Choice
     country_list = None  # type: wx.Choice
@@ -206,15 +287,8 @@ class AddLocationEntryDialog(SettingsDialog):
         lat = location.code_to_geo_dict[region_code]["lat"]
         name = location.code_to_geo_dict[region_code]["name"]
         lng = location.code_to_geo_dict[region_code]["lng"]
-        new_location = {
-            "latitude": lat,
-            "longitude": lng,
-            "name": name
-        }
-        _config.add_location(new_location)
-        self.DestroyChildren()
-        self.Destroy()
-        self.SetReturnCode(wx.ID_OK)
+        add_location(lat, lng, name)
+        super(SettingsDialog, self).onOk(evt)
 
 
 class AccurateWeatherPanel(SettingsPanel):
@@ -223,6 +297,7 @@ class AccurateWeatherPanel(SettingsPanel):
     location_manager_button = None  # type: wx.Button
     edit_location_sequence_button = None  # type: wx.Button
     provider_specific_settings_button = None  # type: wx.Button
+    show_about_box_button = None  # type: wx.Button
 
     def onSave(self):
         _config.provider_id = self.choose_provider_list.GetSelection()
@@ -254,6 +329,24 @@ class AccurateWeatherPanel(SettingsPanel):
             _config.config["location_report_sequence"] = dlg.GetOrder()
             _config.save_json()
 
+    def onAbout(self, evt):
+        """
+        Show about dialog
+        """
+        from wx.adv import AboutDialogInfo
+        info = AboutDialogInfo()
+        info.AddDeveloper("Larry Wang")
+        info.SetName(_addonSummary)
+        icon_path = os.path.join(globalVars.appArgs.configPath,
+                                 "addons",
+                                 "accurate_weather",
+                                 "colorfulClouds.png")
+        info.SetIcon(wx.Icon(icon_path, wx.BITMAP_TYPE_PNG))
+        description = _(
+            "The precipitation forecast on per minute basis is jointly produced by China Meteorological Administration and Colorful Clouds Technology")
+        info.SetDescription(description)
+        wx.adv.AboutBox(info, self)
+
     title = _("Accurate Weather")
 
     def makeSettings(self, sizer):
@@ -281,6 +374,10 @@ class AccurateWeatherPanel(SettingsPanel):
         self.unit_settings_button.Bind(wx.EVT_BUTTON, self.onUnitSettings)
         sHelper.addItem(self.unit_settings_button)
 
+        self.show_about_box_button = wx.Button(self, label=_("Open about dialog"))
+        self.show_about_box_button.Bind(wx.EVT_BUTTON, self.onAbout)
+        sHelper.addItem(self.show_about_box_button)
+
 
 class UnitSettings(SettingsDialog):
     unit_lists = {}
@@ -298,9 +395,7 @@ class UnitSettings(SettingsDialog):
         for e in units.unit_entries.keys():
             _config.config["units"][e] = self.unit_lists[e].GetSelection()
             _config.save_json()
-        self.DestroyChildren()
-        self.Destroy()
-        self.SetReturnCode(wx.ID_OK)
+        super(SettingsDialog, self).onOk(evt)
 
 
 class ColorfulClouds(SettingsDialog):
@@ -340,6 +435,4 @@ class ColorfulClouds(SettingsDialog):
         _config.set_cc_api_token(self.api_token_input.GetValue())
         _config.set_cc_access_method(self.access_method_list.GetSelection())
         _config.set_cc_description_language(self.description_language_list.GetSelection())
-        self.DestroyChildren()
-        self.Destroy()
-        self.SetReturnCode(wx.ID_OK)
+        super(SettingsDialog, self).onOk(evt)

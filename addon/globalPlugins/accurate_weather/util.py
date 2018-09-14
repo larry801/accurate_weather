@@ -37,6 +37,29 @@ def get_data_from_url(url):
     return data
 
 
+def checkForFloat(value):
+    try:
+        num = float(value)
+        return num
+    except ValueError:
+        return None
+
+
+def isValidLatitude(value):
+    num = checkForFloat(value)
+    if num is not None:
+        return -90 <= num <= 90
+    else:
+        return False
+
+
+def isValidLongitude(value):
+    num = checkForFloat(value)
+    if num is not None:
+        return -180 <= num <= 180
+    else:
+        return False
+
 # class MyHTMLParser(HTMLParser):
 #
 #     def handle_starttag(self, tag, attrs):
