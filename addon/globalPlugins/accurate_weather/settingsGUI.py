@@ -229,6 +229,12 @@ class LocationSettings(CustomSettingsDialog):
 
     title = _("Location manager")
 
+    def onOk(self, evt):
+        self.EndModal(wx.ID_OK)
+
+    def onCancel(self, evt):
+        self.EndModal(wx.ID_CANCEL)
+
     def makeSettings(self, sizer):
         sHelper = guiHelper.BoxSizerHelper(self, sizer=sizer)
         entriesLabelText = _("&Location entries")
@@ -420,7 +426,7 @@ class AccurateWeatherPanel(SettingsPanel):
         _config.setCopyToClipBoard(self.copyToClipBoardCheckBox.IsChecked())
 
     def onLocationManager(self, evt):
-        dlg = LocationSettings(self, multiInstanceAllowed=True)
+        dlg = LocationSettings(self)
         dlg.ShowModal()
 
     def onUnitSettings(self, evt):

@@ -7,32 +7,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'accurate_weather' '0.1.0-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@freelists.org'\n"
-"POT-Creation-Date: 2018-09-12 10:47+0800\n"
-"PO-Revision-Date: 2018-09-12 10:56+0800\n"
+"POT-Creation-Date: 2018-09-15 11:08+0800\n"
+"PO-Revision-Date: 2018-09-15 11:10+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
 "X-Generator: Poedit 2.1.1\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: addon\globalPlugins\accurate_weather\__init__.py:47
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:294
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:486
 msgid "Open location manager"
 msgstr "打开位置管理器"
 
 #: addon\globalPlugins\accurate_weather\__init__.py:51
-#: addon\globalPlugins\accurate_weather\__init__.py:69
+#: addon\globalPlugins\accurate_weather\__init__.py:76
 msgid "No locations please set one"
 msgstr "没有设置您的位置 请在设置对话框内添加"
 
-#: addon\globalPlugins\accurate_weather\__init__.py:65
+#: addon\globalPlugins\accurate_weather\__init__.py:72
 msgid "Announce weather forecast"
 msgstr "朗读天气预报"
 
-#: addon\globalPlugins\accurate_weather\__init__.py:84
+#: addon\globalPlugins\accurate_weather\__init__.py:92
 msgid "Announce realtime weather condition"
 msgstr "播报当前天气"
 
@@ -61,75 +61,128 @@ msgid ""
 "In {name} the weather is currently{temperature} degrees {unit}, {condition}"
 msgstr "{name}现在  {temperature} {unit}  {condition}"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:27
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:26
+msgid "Yes or no?"
+msgstr "是或否？"
+
+#. Translators: The Ok button on a NVDA dialog. This button will accept any changes and dismiss the dialog.
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:73
+msgid "OK"
+msgstr "确认(&O)"
+
+#. Translators: The cancel button on a NVDA dialog. This button will discard any changes and dismiss the dialog.
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:75
+msgid "Cancel"
+msgstr "取消(&C)"
+
+#. Translators: The Apply button on a NVDA dialog. This button will accept any changes but will not dismiss the dialog.
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:78
+msgid "Apply"
+msgstr "应用(&A)"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:170
+msgid "Please input a valid latitude value"
+msgstr "请输入有效的纬度值"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:175
+msgid "Please input a valid longitude value"
+msgstr "请输入有效的经度值"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:182
+msgid "Name of new location"
+msgstr "新位置的名称"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:183
+msgid "Latitude of new location"
+msgstr "新位置纬度"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:184
+msgid "Longitude of new location"
+msgstr "新位置的经度"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:190
 msgid "Location Name Editor"
 msgstr "编辑位置名称"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:33
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:196
 msgid "Save and exit (&S)"
 msgstr "保存并退出(&S)"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:35
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:198
 msgid "Exit (&E)"
 msgstr "退出(&E)"
 
 #. type: ObjectListView.ObjectListView
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:67
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:230
 msgid "Location manager"
 msgstr "位置管理器"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:71
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:234
 msgid "&Location entries"
 msgstr "位置条目"
 
-#. Translators: The label for a button in speech dictionaries dialog to add new entries.
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:85
+#. Translators: The label for a button in location manager to add new entries.
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:248
 msgid "&Add"
 msgstr "添加(&A)"
 
-#. Translators: The label for a button in speech dictionaries dialog to edit existing entries.
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:91
+#. Translators: The label for a button in location manager to edit existing entries.
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:254
 msgid "&Edit"
 msgstr "编辑(&E)"
 
-#. Translators: The label for a button in speech dictionaries dialog to remove existing entries.
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:97
+#. Translators: The label for a button in location manager to remove existing entries.
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:260
 msgid "&Remove"
 msgstr "移除(&R)"
 
 #. type: Button
 #. type: Button
 #. type: Button
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:138
+#. type: Button
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:302
 msgid "How to add new location?"
 msgstr "如何添加新位置？"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:153
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:159
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:311
+msgid ""
+"According to your ip address You are in{city_name},{country}. Do you want to "
+"add this one?"
+msgstr "根据您的 ip 地址, 您在 {city_name}, {country}。是否要添加此项？"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:337
 msgid "Search in geonames"
 msgstr "在 geonames 搜索"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:165
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:343
+msgid "Detect your location by ip address"
+msgstr "通过 ip 地址检测您的位置"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:350
+msgid "Manually input latitude and longitude"
+msgstr "手动输入纬度和经度"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:356
 msgid "Choose from administrative divisions in China"
 msgstr "从中国行政区划选择"
 
 #. type: wx.Choice
 #. type: wx.Choice
 #. type: wx.Choice
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:175
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:367
 msgid "Add a location"
 msgstr "添加位置"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:255
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:442
 msgid ""
 "You can also uncheck the items you don't want to hear its report at all."
 msgstr "您还可以取消选中不希望听到预报的项目。"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:256
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:443
 msgid "Sort the locations"
 msgstr "更改播报顺序"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:275
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:463
 msgid ""
 "The precipitation forecast on per minute basis is jointly produced by China "
 "Meteorological Administration and Colorful Clouds Technology"
@@ -137,67 +190,71 @@ msgstr "分钟降雨预报由中国气象局和彩云科技联合出品"
 
 #. Add-on summary, usually the user visible name of the addon.
 #. Translators: Summary for this add-on to be shown on installation and add-on information.
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:279 buildVars.py:17
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:467 buildVars.py:17
 msgid "Accurate Weather"
 msgstr "天气预报"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:283
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:471
 msgid "Provider:"
 msgstr "提供者:"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:290
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:478
+msgid "Copy announced weather condition to clipboard"
+msgstr "播报后将天气情况复制到剪贴板"
+
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:482
 msgid "Open provider specific settings"
 msgstr "打开数据源设置"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:298
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:490
 msgid "Change report sequence"
 msgstr "更改播报顺序"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:302
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:494
 msgid "Open unit settings"
 msgstr "打开单位设置"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:306
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:498
 msgid "Open about dialog"
 msgstr "关于插件"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:313
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:505
 msgid "Unit Settings"
 msgstr "设置天气预报单位"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:333
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:522
 msgid "Colorful Clouds settings"
 msgstr "彩云天气设置"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:342
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:531
 msgid "How to get data from API"
 msgstr "如何从 API 获取数据"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:343
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:532
 msgid "Through proxy"
 msgstr "通过代理"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:344
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:533
 msgid "Use your own API token"
 msgstr "使用您自己的 API 密钥"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:350
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:539
 msgid "English"
 msgstr "英语"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:351
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:540
 msgid "Simplified Chinese"
 msgstr "简体中文"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:352
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:541
 msgid "Traditional Chinese (Taiwan)"
 msgstr "繁体中文（台湾）"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:355
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:544
 msgid "Language used in forecast description"
 msgstr "天气预报语言"
 
-#: addon\globalPlugins\accurate_weather\settingsGUI.py:360
+#: addon\globalPlugins\accurate_weather\settingsGUI.py:549
 msgid "API Key"
 msgstr "API密钥"
 
