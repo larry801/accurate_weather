@@ -134,8 +134,12 @@ def get_location(slot_number):
     return config["locations"][slot_number]
 
 
-def copy_to_clipboard():
+def copyToClipboard():
     return config["copy_to_clipboard"]
+
+
+def setCopyToClipBoard(value):
+    config["copy_to_clipboard"] = value
 
 
 def set_copy_to_clipboard(value):
@@ -192,6 +196,21 @@ def cc_access_method():
     return val
 
 
+def unit_config_or_default(key_name, default_value):
+    try:
+        val = config["units"][key_name]
+    except KeyError:
+        val = default_value
+        config["units"][key_name] = default_value
+        save_json()
+    return val
+
+
+def set_unit_config(key_name, value):
+    config["units"][key_name] = value
+    save_json()
+
+
 def cc_config_or_default(key_name, default_value):
     try:
         val = config["providers"]["0"][key_name]
@@ -200,6 +219,7 @@ def cc_config_or_default(key_name, default_value):
         config["providers"]["0"][key_name] = default_value
         save_json()
     return val
+
 
 def set_cc_config(key_name, value):
     config["providers"]["0"][key_name] = value

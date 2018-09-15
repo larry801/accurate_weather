@@ -42,7 +42,122 @@ def YesOrNo(parent, question, caption=confirm_message):
     return result
 
 
-class ManuallyInputLocationDialog(SettingsDialog):
+class CustomSettingsDialog(wx.Dialog):
+    """A settings dialog.
+    """
+    title = ""
+
+    def __init__(self, parent,
+                 resizeable=False,
+                 hasApplyButton=False,
+                 settingsSizerOrientation=wx.VERTICAL,
+                 multiInstanceAllowed=False):
+        windowStyle = wx.DEFAULT_DIALOG_STYLE | (wx.RESIZE_BORDER if resizeable else 0)
+        super(CustomSettingsDialog, self).__init__(parent, title=self.title, style=windowStyle)
+        self.hasApply = hasApplyButton
+
+        # the wx.Window must be constructed before we can get the handle.
+        import windowUtils
+        self.scaleFactor = windowUtils.getWindowScalingFactor(self.GetHandle())
+
+        self.mainSizer = wx.BoxSizer(wx.VERTICAL)
+        self.settingsSizer = wx.BoxSizer(settingsSizerOrientation)
+        self.makeSettings(self.settingsSizer)
+
+        self.mainSizer.Add(self.settingsSizer, border=guiHelper.BORDER_FOR_DIALOGS, flag=wx.ALL | wx.EXPAND,
+                           proportion=1)
+        self.mainSizer.Add(wx.StaticLine(self), flag=wx.EXPAND)
+
+        buttonSizer = guiHelper.ButtonHelper(wx.HORIZONTAL)
+        # Translators: The Ok button on a NVDA dialog. This button will accept any changes and dismiss the dialog.
+        buttonSizer.addButton(self, label=_("OK"), id=wx.ID_OK)
+        # Translators: The cancel button on a NVDA dialog. This button will discard any changes and dismiss the dialog.
+        buttonSizer.addButton(self, label=_("Cancel"), id=wx.ID_CANCEL)
+        if hasApplyButton:
+            # Translators: The Apply button on a NVDA dialog. This button will accept any changes but will not dismiss the dialog.
+            buttonSizer.addButton(self, label=_("Apply"), id=wx.ID_APPLY)
+
+        self.mainSizer.Add(
+            buttonSizer.sizer,
+            border=guiHelper.BORDER_FOR_DIALOGS,
+            flag=wx.ALL | wx.ALIGN_RIGHT
+        )
+
+        self.mainSizer.Fit(self)
+        self.SetSizer(self.mainSizer)
+
+        self.Bind(wx.EVT_BUTTON, self.onOk, id=wx.ID_OK)
+        self.Bind(wx.EVT_BUTTON, self.onCancel, id=wx.ID_CANCEL)
+        self.Bind(wx.EVT_BUTTON, self.onApply, id=wx.ID_APPLY)
+        self.Bind(wx.EVT_CHAR_HOOK, self._enterActivatesOk_ctrlSActivatesApply)
+
+        self.postInit()
+        self.CentreOnScreen()
+
+    def _enterActivatesOk_ctrlSActivatesApply(self, evt):
+        """Listens for keyboard input and triggers ok button on enter and triggers apply button when control + S is
+        pressed. Cancel behavior is built into wx.
+        Pressing enter will also close the dialog when a list has focus
+        (e.g. the list of symbols in the symbol pronunciation dialog).
+        Without this custom handler, enter would propagate to the list control (wx ticket #3725).
+        """
+        if evt.KeyCode in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER):
+            self.ProcessEvent(wx.CommandEvent(wx.wxEVT_COMMAND_BUTTON_CLICKED, wx.ID_OK))
+        elif self.hasApply and evt.UnicodeKey == ord(u'S') and evt.controlDown:
+            self.ProcessEvent(wx.CommandEvent(wx.wxEVT_COMMAND_BUTTON_CLICKED, wx.ID_APPLY))
+        else:
+            evt.Skip()
+
+    def makeSettings(self, sizer):
+        """Populate the dialog with settings controls.
+        Subclasses must override this method.
+        @param sizer: The sizer to which to add the settings controls.
+        @type sizer: wx.Sizer
+        """
+        raise NotImplementedError
+
+    def postInit(self):
+        """Called after the dialog has been created.
+        For example, this might be used to set focus to the desired control.
+        Sub-classes may override this method.
+        """
+
+    def onOk(self, evt):
+        """Take action in response to the OK button being pressed.
+        Sub-classes may extend this method.
+        This base method should always be called to clean up the dialog.
+        """
+        self.DestroyChildren()
+        self.Destroy()
+        self.SetReturnCode(wx.ID_OK)
+
+    def onCancel(self, evt):
+        """Take action in response to the Cancel button being pressed.
+        Sub-classes may extend this method.
+        This base method should always be called to clean up the dialog.
+        """
+        self.DestroyChildren()
+        self.Destroy()
+        self.SetReturnCode(wx.ID_CANCEL)
+
+    def onApply(self, evt):
+        """Take action in response to the Apply button being pressed.
+        Sub-classes may extend or override this method.
+        This base method should be called to run the postInit method.
+        """
+        self.postInit()
+        self.SetReturnCode(wx.ID_APPLY)
+
+    def scaleSize(self, size):
+        """Helper method to scale a size using the logical DPI
+        @param size: The size (x,y) as a tuple or a single numerical type to scale
+        @returns: The scaled size, returned as the same type"""
+        if isinstance(size, tuple):
+            return self.scaleFactor * size[0], self.scaleFactor * size[1]
+        return self.scaleFactor * size
+
+
+class ManuallyInputLocationDialog(CustomSettingsDialog):
     name_input = None  # type: wx.TextCtrl
     latitude_input = None  # type: wx.TextCtrl
     longitude_input = None  # type: wx.TextCtrl
@@ -60,7 +175,7 @@ class ManuallyInputLocationDialog(SettingsDialog):
             ui.message(_("Please input a valid longitude value"))
             return
         add_location(lat, lng, name)
-        super(SettingsDialog, self).onOk(evt)
+        super(ManuallyInputLocationDialog, self).onOk(evt)
 
     def makeSettings(self, sizer):
         helper = guiHelper.BoxSizerHelper(self, sizer=sizer)
@@ -109,7 +224,7 @@ class EditLocationNameDlg(wx.Dialog):
         self.EndModal(0)
 
 
-class LocationSettings(SettingsDialog):
+class LocationSettings(CustomSettingsDialog):
     location_list = None  # type: ObjectListView.ObjectListView
 
     title = _("Location manager")
@@ -129,19 +244,19 @@ class LocationSettings(SettingsDialog):
         bHelper = guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
         bHelper.addButton(
             parent=self,
-            # Translators: The label for a button in speech dictionaries dialog to add new entries.
+            # Translators: The label for a button in location manager to add new entries.
             label=_("&Add")
         ).Bind(wx.EVT_BUTTON, self.OnAddClick)
 
         bHelper.addButton(
             parent=self,
-            # Translators: The label for a button in speech dictionaries dialog to edit existing entries.
+            # Translators: The label for a button in location manager to edit existing entries.
             label=_("&Edit")
         ).Bind(wx.EVT_BUTTON, self.OnEditClick)
 
         bHelper.addButton(
             parent=self,
-            # Translators: The label for a button in speech dictionaries dialog to remove existing entries.
+            # Translators: The label for a button in location manager to remove existing entries.
             label=_("&Remove")
         ).Bind(wx.EVT_BUTTON, self.OnRemoveClick)
         sHelper.addItem(bHelper)
@@ -179,7 +294,7 @@ class LocationSettings(SettingsDialog):
         self.refresh_list()
 
 
-class ChooseMethodsToAddLocation(SettingsDialog):
+class ChooseMethodsToAddLocation(CustomSettingsDialog):
     geo_button = None  # type: Button
     China_administrative_division_button = None  # type: Button
     manually_input_button = None  # type: Button
@@ -245,7 +360,7 @@ class ChooseMethodsToAddLocation(SettingsDialog):
 
 
 # noinspection PyTypeChecker
-class ChooseFromChinaAdministrativeDivisionDialog(SettingsDialog):
+class ChooseFromChinaAdministrativeDivisionDialog(CustomSettingsDialog):
     province_list = None  # type: wx.Choice
     region_list = None  # type: wx.Choice
     country_list = None  # type: wx.Choice
@@ -288,11 +403,12 @@ class ChooseFromChinaAdministrativeDivisionDialog(SettingsDialog):
         name = location.code_to_geo_dict[region_code]["name"]
         lng = location.code_to_geo_dict[region_code]["lng"]
         add_location(lat, lng, name)
-        super(SettingsDialog, self).onOk(evt)
+        super(ChooseFromChinaAdministrativeDivisionDialog, self).onOk(evt)
 
 
 class AccurateWeatherPanel(SettingsPanel):
     unit_settings_button = None  # type: Button
+    copyToClipBoardCheckBox = None  # type: wx.CheckBox
     choose_provider_list = None  # type: wx.Choice
     location_manager_button = None  # type: wx.Button
     edit_location_sequence_button = None  # type: wx.Button
@@ -300,7 +416,8 @@ class AccurateWeatherPanel(SettingsPanel):
     show_about_box_button = None  # type: wx.Button
 
     def onSave(self):
-        _config.provider_id = self.choose_provider_list.GetSelection()
+        _config.set_provider_id(self.choose_provider_list.GetSelection())
+        _config.setCopyToClipBoard(self.copyToClipBoardCheckBox.IsChecked())
 
     def onLocationManager(self, evt):
         dlg = LocationSettings(self, multiInstanceAllowed=True)
@@ -355,8 +472,12 @@ class AccurateWeatherPanel(SettingsPanel):
         choice_of_provider_list = [x.name for x in _config.providers_list]
         self.choose_provider_list = sHelper.addLabeledControl(label_of_provider_list, wx.Choice,
                                                               choices=choice_of_provider_list)
-        pid = _config.config["provider_id"]
+        pid = _config.provider_id()
         self.choose_provider_list.SetSelection(pid)
+
+        copyToClipboardLabel = _("Copy announced weather condition to clipboard")
+        self.copyToClipBoardCheckBox = wx.CheckBox(self, label=copyToClipboardLabel)
+        sHelper.addItem(self.copyToClipBoardCheckBox)
 
         self.provider_specific_settings_button = wx.Button(self, label=_("Open provider specific settings"))
         self.provider_specific_settings_button.Bind(wx.EVT_BUTTON, self.onProviderSettings)
@@ -379,7 +500,7 @@ class AccurateWeatherPanel(SettingsPanel):
         sHelper.addItem(self.show_about_box_button)
 
 
-class UnitSettings(SettingsDialog):
+class UnitSettings(CustomSettingsDialog):
     unit_lists = {}
     title = _("Unit Settings")
 
@@ -389,16 +510,15 @@ class UnitSettings(SettingsDialog):
             self.unit_lists[e] = sHelper.addLabeledControl(units.unit_entries[e]["label"],
                                                            wx.Choice,
                                                            choices=units.unit_entries[e]["choices"])
-            self.unit_lists[e].SetSelection(_config.config["units"][e])
+            self.unit_lists[e].SetSelection(_config.unit_config_or_default(e, 0))
 
     def onOk(self, evt):
         for e in units.unit_entries.keys():
-            _config.config["units"][e] = self.unit_lists[e].GetSelection()
-            _config.save_json()
-        super(SettingsDialog, self).onOk(evt)
+            _config.set_unit_config(self.unit_lists[e].GetSelection())
+        super(UnitSettings, self).onOk(evt)
 
 
-class ColorfulClouds(SettingsDialog):
+class ColorfulClouds(CustomSettingsDialog):
     title = _("Colorful Clouds settings")
 
     api_token_input = None  # type: wx.TextCtrl
@@ -435,4 +555,6 @@ class ColorfulClouds(SettingsDialog):
         _config.set_cc_api_token(self.api_token_input.GetValue())
         _config.set_cc_access_method(self.access_method_list.GetSelection())
         _config.set_cc_description_language(self.description_language_list.GetSelection())
-        super(SettingsDialog, self).onOk(evt)
+        super(ColorfulClouds, self).onOk(evt)
+
+

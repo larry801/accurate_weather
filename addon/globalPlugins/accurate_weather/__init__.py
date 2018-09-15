@@ -10,7 +10,7 @@ A global plugin
 """
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
-
+import api
 from io import StringIO
 from . import reporter
 from . import settingsGUI
@@ -40,11 +40,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     #
     # script_about.__doc__ = _("Open about dialog")
 
-    # def script_open_location_manager(self, evt):
-    #     dlg = settingsGUI.LocationSettings(gui.mainFrame, multiInstanceAllowed=True)
-    #     gui.runScriptModalDialog(dlg)
-    #
-    # script_open_location_manager.__doc__ = _("Open location manager")
+    def script_open_location_manager(self, evt):
+        dlg = settingsGUI.LocationSettings(gui.mainFrame)
+        gui.runScriptModalDialog(dlg)
+
+    script_open_location_manager.__doc__ = _("Open location manager")
 
     def script_announce_forecast(self, gesture):
         if not _config.config["locations"]:
@@ -60,7 +60,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             this_location = _config.get_location(l)
             provider.forecast_update(this_location)
             buffer.write(forecast_reporter.report(this_location))
-        ui.message(buffer.getvalue())
+        msg = buffer.getvalue()
+        self.copyAndAnnounce(msg)
+
+    @staticmethod
+    def copyAndAnnounce(message):
+        if _config.copyToClipboard():
+            api.copyToClip(message)
+        ui.message(message)
 
     script_announce_forecast.__doc__ = _("Announce weather forecast")
 
@@ -79,7 +86,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             provider.update(this_location)
             report_string = realtime_reporter.report(this_location)
             buffer.write(report_string)
-        ui.message(buffer.getvalue())
+        msg = buffer.getvalue()
+        self.copyAndAnnounce(msg)
 
     script_announce_real_time.__doc__ = _("Announce realtime weather condition")
 
@@ -103,7 +111,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
     __gestures = {
         # "kb:NVDA+alt+shift+w": "about",
-        # "kb:NVDA+control+alt+shift+w": "open_location_manager"
+        "kb:NVDA+control+alt+shift+w": "open_location_manager",
         "kb:NVDA+w": "announce_real_time",
         "kb:NVDA+alt+w": "announce_forecast",
     }
