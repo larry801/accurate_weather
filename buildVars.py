@@ -20,7 +20,7 @@ addon_info = {
     "addon_description": _(
         "Provide minutely precipitation report based on accurate geo location. This addon uses api from colorful cloud"),
     # version
-    "addon_version": "0.1.7-dev",
+    "addon_version": "0.1.8-dev",
     # Author(s)
     "addon_author": "LarryWang <larry.wang.801@gmail.com>",
     # URL for the add-on documentation support

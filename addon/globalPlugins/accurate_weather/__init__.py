@@ -60,6 +60,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             this_location = _config.get_location(l)
             provider.forecast_update(this_location)
             buffer.write(forecast_reporter.report(this_location))
+            buffer.write("\r\n")
         msg = buffer.getvalue()
         self.copyAndAnnounce(msg)
 
@@ -86,6 +87,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             provider.update(this_location)
             report_string = realtime_reporter.report(this_location)
             buffer.write(report_string)
+            buffer.write("\r\n")
         msg = buffer.getvalue()
         self.copyAndAnnounce(msg)
 
